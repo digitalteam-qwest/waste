@@ -355,8 +355,7 @@ const getAuthenticateResponse = () => {
     }
 }
 
-//runs when the binUPRN token changes
-$('input[name="binUPRN"]').change(() => {
+const checkChange = () => {
     if ($('input[name="binUPRN"]')[0].value !== '' && $('input[name="binUPRN"]')[0].value !== UPRN) {
         console.log('UPRN change: ', performance.now())
         
@@ -380,7 +379,11 @@ $('input[name="binUPRN"]').change(() => {
         $('input[name="round"]')[0].value = ''
         $('input[name="round"]').trigger('input')
     }
-    
+}
+
+//runs when the binUPRN token changes
+$('input[name="binUPRN"]').change(() => {
+    checkChange()
 })
 
 $(document).ready(function(){
