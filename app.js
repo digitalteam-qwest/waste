@@ -388,7 +388,7 @@ $('input[name="binUPRN"]').change(() => {
 
 $(document).ready(function(){
     //code for running integration
-    $.getScript("https://gitcdn.link/cdn/digitalteam-Qwest/run-lookup/main/app.js")
+    $.getScript("https://gitcdn.link/cdn/digitalteam-Qwest/run-lookup/main/app.js").done(checkChange())
 });
 
 let payload = {}
