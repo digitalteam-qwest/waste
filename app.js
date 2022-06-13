@@ -381,18 +381,27 @@ const checkChange = () => {
     }
 }
 
+const getIntegrationScript = () => {
+    //code for running integration
+    $.getScript("https://gitcdn.link/cdn/digitalteam-Qwest/run-lookup/main/app.js").done(
+        scriptLoaded = true,
+        checkChange()
+    )
+}
+
 //runs when the binUPRN token changes
 $('input[name="binUPRN"]').change(() => {
-    checkChange()
+    if (scriptLoaded) {
+        checkChange()
+    } else {
+        getIntegrationScript()
+    }
 })
-
-$(document).ready(function(){
-    //code for running integration
-    $.getScript("https://gitcdn.link/cdn/digitalteam-Qwest/run-lookup/main/app.js").done(checkChange())
-});
 
 let payload = {}
 let AuthenticateResponse = ''
 let lookupStatus = true
 
 let UPRN = ''
+
+let scriptLoaded = false
