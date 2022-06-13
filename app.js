@@ -1,3 +1,10 @@
+//Display the error message if data isn't returned properly
+const displayError = () => {
+    logIntRun()
+    
+	$('#bin-schedule-content').empty().append('<p>Bin schedule is not available at the moment. Please try again later.</p>')
+}
+
 const displayResults = (results, resultKeys) => {
     console.log('Display data: ', performance.now())
     
@@ -288,11 +295,16 @@ const sortResults = (featuresScheduleGetResponse, jobsGetResponse, premisesAttri
     displayResults(results, resultKeys)
 }
 
+
 //checks if data has returned from all integration before working on them
 const checkData = (featuresScheduleGetResponse, jobsGetResponse, premisesAttributeGetResponse) => {
-    if (featuresScheduleGetResponse !== '' && jobsGetResponse !== '' && premisesAttributeGetResponse !== '') {
-        sortResults(featuresScheduleGetResponse, jobsGetResponse, premisesAttributeGetResponse)
-    }
+	if (featuresScheduleGetResponse.hasRan && jobsGetResponse.hasRan && premisesAttributeGetResponse.hasRan) {
+	    if (featuresScheduleGetResponse.success && jobsGetResponse.success && premisesAttributeGetResponse.success) {
+	        sortResults(featuresScheduleGetResponse.data, jobsGetResponse.data, premisesAttributeGetResponse.data)
+	    } else {
+	        displayError()
+	    }
+	}
 }
 
 //runs all the relevant integration to retreive the data
@@ -308,30 +320,30 @@ const getBins = () => {
             "value": AuthenticateResponse
         }
     }
-    
-    let response1 = ''
-    let response2 = ''
-    let response3 = ''
+	
+	const template = {
+	    hasRan: false,
+	    success: false,
+	    data: ''
+	}
+	
+    let response1 = Object.create(template)
+    let response2 = Object.create(template)
+    let response3 = Object.create(template)
     
     //run each integration and check if all the data is returned
     runLookup('6101d1a29ba09', payload).then((response) => {
-        //intRunCache.push('Bartec - binsubform - Features_Schedules_Get')
         cacheIntRun('Bartec - binsubform - Features_Schedules_Get')
-        
         response1 = response
         checkData(response1, response2, response3)
     })
     runLookup('6101d23110243', payload).then((response) => {
-        //intRunCache.push('Bartec - binsubform - Jobs_Get')
         cacheIntRun('Bartec - binsubform - Jobs_Get')
-        
         response2 = response
         checkData(response1, response2, response3)
     })
     runLookup('6101d1ec57644', payload).then((response) => {
-        //intRunCache.push('Bartec - binsubform - Premises_Attributes_Get')
         cacheIntRun('Bartec - binsubform - Premises_Attributes_Get')
-        
         response3 = response
         checkData(response1, response2, response3)
     })
@@ -342,14 +354,16 @@ const getAuthenticateResponse = () => {
     console.log('Authentication token get: ', performance.now())
     
     if (AuthenticateResponse == '') {
-        runLookup('609b918c7dd6d').then((value) => {
-            //intRunCache.push('Bartec - get authenticate token')
-            cacheIntRun('Bartec - get authenticate token')
-            
-            AuthenticateResponse = value[0].AuthenticateResponse
-            
-            getBins()
-        })
+		runLookup('609b918c7dd6d').then((response) => {
+			cacheIntRun('Bartec - get authenticate token')
+			
+            if (response.success) {
+                AuthenticateResponse = response.data[0].AuthenticateResponse
+			    getBins()
+            } else {
+                displayError()
+            }
+		})
     } else {
         getBins()
     }
