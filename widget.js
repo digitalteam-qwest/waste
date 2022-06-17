@@ -1,8 +1,7 @@
 class binWidget {
-    constructor() {
+    constructor(UPRN) {
         this.AuthenticateResponse = ''
-        //this.UPRN = '{uprn}'
-        this.UPRN = $('input[name="uprn"]')[0].value
+        this.UPRN = UPRN
     }
 
     start () {
