@@ -221,15 +221,15 @@ class binWidget {
             }
         }
         
-        const weekdayList = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+        const weekdayList = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"]
         
         //use the most common collection day and round letter to populate the round token
-        const roundName = weekdayList[mode(collectionDays)] + ' ' + roundLetter
+        const roundName = weekdayList[mode(collectionDays)] + '-' + roundLetter
         
-        this.displayResults(results, resultKeys)
+        this.displayResults(results, resultKeys, roundName)
     }
 
-    displayResults (results, resultKeys) {
+    displayResults (results, resultKeys, roundName) {
         console.log('displaying results')
         let content = ''
         
@@ -264,6 +264,8 @@ class binWidget {
                 content += '</div>'
             }
         }
+
+        content += '<p><a target="_blank" href="https://www.cheshirewestandchester.gov.uk/documents/waste-calendars/' + roundName + '.PDF">View your calendar</a></p>'
             
         content += '</div>'
             
@@ -277,4 +279,3 @@ class binWidget {
         $('#bin-schedule-content').empty().append('<p>Bin schedule is not available at the moment. Please try again later.</p>')
     }
 }
-  
