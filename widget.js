@@ -273,7 +273,7 @@ class binWidget {
     }
 
     //Display the error message if data isn't returned properly
-    displayError = () => {
+    displayError () {
         logIntRun()
 
         $('#bin-schedule-content').empty().append('<p>Bin schedule is not available at the moment. Please try again later.</p>')
