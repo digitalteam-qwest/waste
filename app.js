@@ -1,5 +1,3 @@
-//testing vs code online on github.dev
-
 //Display the error message if data isn't returned properly
 const displayError = () => {
     logIntRun()
